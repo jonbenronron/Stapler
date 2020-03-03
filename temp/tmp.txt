@@ -1,0 +1,3 @@
+OBS!
+
+This directory is for temporary files while running the program.
