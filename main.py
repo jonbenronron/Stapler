@@ -1,6 +1,7 @@
 #   Author: Roni Keuru
 #   Licence: Open source
 
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
@@ -88,7 +89,14 @@ def merge_files():
                 if index > 0:
                     index -= 1
             name = ent_name.get()
-            pdf = [name, pdf_merge]
+            try:
+                os.remove('temp/temp.pdf')
+            except OSError as e:
+                print("Error: %s - %s." % (e.filename, e.strerror))
+            with open('temp/temp.pdf', 'wb') as temp:
+                pdf_merge.write(temp)
+            file = PdfFileReader('temp/temp.pdf')
+            pdf = [name, file]
             files.append(pdf)
             ls_files.insert(index, name)
             ls_files.activate(index)
@@ -108,6 +116,10 @@ def save_file():
             return
         with open(filepath, "wb") as output:
             pdf_merge.write(output)
+        try:
+            os.remove('temp/temp.pdf')
+        except OSError as e:
+            print("Error: %s - %s." % (e.filename, e.strerror))
     else:
         return
 
@@ -145,3 +157,8 @@ ent_name.grid(row=0, column=1,
               sticky="nesw")
 
 window.mainloop()
+
+try:
+    os.remove('temp/temp.pdf')
+except OSError as e:
+    print("Error: %s - %s." % (e.filename, e.strerror))
