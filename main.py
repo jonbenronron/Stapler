@@ -1,0 +1,147 @@
+#   Author: Roni Keuru
+#   Licence: Open source
+
+import tkinter as tk
+from tkinter import ttk
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
+
+#   List of pdf-files
+files = []
+#   Number of items in files list
+index = 0
+
+pdf_merge = PdfFileMerger()
+
+window = tk.Tk()
+window.title("Stapler - A pdf-file merger")
+window.rowconfigure(1, minsize=600, weight=1)
+window.columnconfigure(1, minsize=800, weight=1)
+
+ls_files = tk.Listbox(master=window,
+                      activestyle='dotbox',
+                      selectmode=tk.EXTENDED)
+
+lb_name = tk.Label(master=window, text="Pdf title")
+pdfname = tk.StringVar(master=window)
+ent_name = ttk.Entry(master=window, textvariable=pdfname)
+
+
+def import_file():
+    filepath = askopenfilename(
+        filetypes=[("Pdf Files", "*.pdf"), ("All Files", "*.*")]
+    )
+    if not filepath:
+        return
+    with open(filepath, "r") as input_file:
+        global files
+        file = PdfFileReader(filepath)
+        directories = filepath.split("/")
+        print(directories)
+        file_name = directories[len(directories) - 1].split(".")
+        print(file_name)
+        name = file_name[0]
+        print(name)
+        pdf_reader = [name, file]
+        files.append(pdf_reader)
+        print(files)
+        global index
+        ls_files.insert(index, name)
+        ls_files.activate(index)
+        index += 1
+
+
+def delete_file():
+    # List of selected items indices
+    selected_indices = list(ls_files.curselection())
+    # Items has to be deleted in reversed order to avoid an IndexError
+    selected_indices.reverse()
+    print(selected_indices)
+    for i in selected_indices:
+        print(i)
+        ls_files.delete(i, last=None)
+        del files[i]
+        global index
+        if index > 0:
+            index -= 1
+
+
+def merge_files():
+    global index
+    global pdf_merge
+    if ls_files.curselection():
+        if ent_name.get() == "":
+            print("File has no title.")
+            return
+        else:
+            selected_indices = list(ls_files.curselection())
+            print(selected_indices)
+            for i in selected_indices:
+                global files
+                f = files[i][1]
+                print(f)
+                pdf_merge.append(fileobj=f)
+            selected_indices.reverse()
+            for i in selected_indices:
+                ls_files.delete(i, last=None)
+                del files[i]
+                if index > 0:
+                    index -= 1
+            name = ent_name.get()
+            pdf = [name, pdf_merge]
+            files.append(pdf)
+            ls_files.insert(index, name)
+            ls_files.activate(index)
+            index += 1
+    else:
+        return
+
+
+def save_file():
+    global pdf_merge
+    if ls_files.curselection() and len(ls_files.curselection()) == 1:
+        filepath = asksaveasfilename(
+            defaultextension="pdf",
+            filetypes=[("Pdf Files", "*.pdf")],
+        )
+        if not filepath:
+            return
+        with open(filepath, "wb") as output:
+            pdf_merge.write(output)
+    else:
+        return
+
+
+fr_buttons = tk.Frame(master=window, relief=tk.RAISED, bd=2)
+btn_import = tk.Button(master=fr_buttons,
+                       text="Import",
+                       command=import_file)
+btn_delete = tk.Button(master=fr_buttons,
+                       text="Delete",
+                       command=delete_file)
+btn_merge = tk.Button(master=fr_buttons,
+                      text="Merge",
+                      command=merge_files)
+btn_save = tk.Button(master=fr_buttons,
+                     text="Save",
+                     command=save_file)
+
+btn_import.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
+btn_delete.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+btn_merge.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+btn_save.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
+
+fr_buttons.grid(row=1, column=0,
+                rowspan=1, columnspan=1,
+                sticky="nesw")
+ls_files.grid(row=1, column=1,
+              rowspan=1, columnspan=2,
+              sticky="nesw")
+lb_name.grid(row=0, column=0,
+             rowspan=1, columnspan=1,
+             sticky="nesw")
+ent_name.grid(row=0, column=1,
+              rowspan=1, columnspan=2,
+              sticky="nesw")
+
+window.mainloop()
