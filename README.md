@@ -5,7 +5,7 @@ GUI is done with tkinter. <br/>
 
 How to:
 1. Download and install python 3 from https://www.python.org/, if not installed. <br/>
-2. Download and put the Stapler/main.py file to a directory of your choice. <br/>
+2. Download and put the Stapler to a directory of your choice. <br/>
 3. Open command prompt and navigate to the directory that contains the main.py file. <br/>
 4. Write following commands <br/>
   - 'python -m pip install -U pip' (This upgrades the package manager https://pypi.org/) <br/>
@@ -17,6 +17,9 @@ How to:
 Notes:
 Python package manager 'pip' should be installed already in newer versions of python.
 At this point Stapler won't run without 'tkinter' and 'pypdf2' packages.
+You could just download the main.py file at this point as long as there exists a temp directory
+at same directory as the main.py is located. Of course you can create one yourself.
+If program is not able to find one, it will give you an error message.
 
 Future plans:
 - Split feature that allows user to split a page from pdf when needed.
