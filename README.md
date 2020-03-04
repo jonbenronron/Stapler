@@ -3,8 +3,6 @@ Pdf merge app with simple GUI (work in progress).. <br/>
 Pdf handling is done with PyPDF2. <br/>
 GUI is done with tkinter. <br/>
 
-![Alt text](img/Stapler.jpg?raw=true "Preview")
-
 ### How to:
 1. Download and install python 3 from [Python](https://www.python.org/), if not installed. <br/>
 2. Download and put the Stapler to a directory of your choice. <br/>
