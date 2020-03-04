@@ -1,5 +1,10 @@
-#   Author: Roni Keuru
-#   Licence: Open source
+#   Author:     Roni Keuru
+#   Licence:    Open source GNU General Public License v3.0
+#   Date:       4.3.2020
+
+#################
+#   PACKAGES    #
+#################
 
 import os
 import tkinter as tk
@@ -7,22 +12,27 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
-#   List of pdf-files
-files = []
-#   Number of items in files list
-index = 0
+#
+#
+#
 
-pdf_merge = PdfFileMerger()
+files = []  # List of pdf-files.
+index = 0  # Number of items in files list.
 
+pdf_merge = PdfFileMerger()  # Not sure if I keep this here.
+
+#   Initializing a app window.
 window = tk.Tk()
 window.title("Stapler - A pdf-file merger")
 window.rowconfigure(1, minsize=600, weight=1)
 window.columnconfigure(1, minsize=800, weight=1)
 
+#   List widget.
 ls_files = tk.Listbox(master=window,
                       activestyle='dotbox',
                       selectmode=tk.EXTENDED)
 
+#   Entry for naming the pdf.
 lb_name = tk.Label(master=window, text="Pdf title")
 pdfname = tk.StringVar(master=window)
 ent_name = ttk.Entry(master=window, textvariable=pdfname)
