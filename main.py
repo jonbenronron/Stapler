@@ -12,9 +12,9 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
-#
-#
-#
+#############
+#   Init    #
+#############
 
 files = []  # List of pdf-files.
 index = 0  # Number of items in files list.
@@ -36,6 +36,13 @@ ls_files = tk.Listbox(master=window,
 lb_name = tk.Label(master=window, text="Pdf title")
 pdfname = tk.StringVar(master=window)
 ent_name = ttk.Entry(master=window, textvariable=pdfname)
+
+
+#################
+#   Functions   #
+#################
+
+#   Function for import button
 
 
 def import_file():
@@ -62,6 +69,9 @@ def import_file():
         index += 1
 
 
+#   Function for delete button
+
+
 def delete_file():
     # List of selected items indices
     selected_indices = list(ls_files.curselection())
@@ -75,6 +85,9 @@ def delete_file():
         global index
         if index > 0:
             index -= 1
+
+
+#   Function for merge button
 
 
 def merge_files():
@@ -115,6 +128,9 @@ def merge_files():
         return
 
 
+#   Function for save button
+
+
 def save_file():
     global pdf_merge
     if ls_files.curselection() and len(ls_files.curselection()) == 1:
@@ -134,6 +150,11 @@ def save_file():
         return
 
 
+#########################
+#   Init for buttons    #
+#########################
+
+#   Buttons are initialized here because they need functions to be defined
 fr_buttons = tk.Frame(master=window, relief=tk.RAISED, bd=2)
 btn_import = tk.Button(master=fr_buttons,
                        text="Import",
@@ -148,11 +169,13 @@ btn_save = tk.Button(master=fr_buttons,
                      text="Save",
                      command=save_file)
 
+#   Positions of the buttons
 btn_import.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 btn_delete.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
 btn_merge.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
 btn_save.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
 
+#   The layout of the program
 fr_buttons.grid(row=1, column=0,
                 rowspan=1, columnspan=1,
                 sticky="nesw")
@@ -166,9 +189,18 @@ ent_name.grid(row=0, column=1,
               rowspan=1, columnspan=2,
               sticky="nesw")
 
+#################
+#   Main loop   #
+#################
+
 window.mainloop()
 
+#################
+#   Clean up    #
+#################
+
 try:
-    os.remove('temp/temp.pdf')
+    os.remove('temp/temp.pdf')  # Any temporary files has to be removed
 except OSError as e:
+    # temp directory is empty or does not exist
     print("Error: %s - %s." % (e.filename, e.strerror))
