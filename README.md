@@ -1,6 +1,6 @@
 # Stapler
 Pdf merge app with simple GUI (work in progress).. <br/>
-Pdf handeling is done with PyPDF2. <br/>
+Pdf handling is done with PyPDF2. <br/>
 GUI is done with tkinter. <br/>
 
 How to:
