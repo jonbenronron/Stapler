@@ -19,14 +19,11 @@ GUI is done with tkinter. <br/>
 ### Notes:
 Python package manager 'pip' should be installed already in newer versions of python.
 At this point Stapler won't run without 'tkinter' and 'pypdf2' packages.
-You could just download the main.py file at this point as long as there exists a temp directory
-at same directory as the main.py is located. Of course you can create one yourself.
-If program is not able to find one, it will give you an error message.
 
 ### Future plans:
-- [ ] Object oriented approach. (Working with this at the moment.)
+- [X] Object oriented approach. (Working with this at the moment.)
 - [ ] Split feature that allows user to split a page from pdf when needed.
 - [ ] Make it executable stapler.exe (windows) and stapler.app (mac).
 
 ### Known bugs:
-- [ ] Unmerged pdf-files can't be saved. (OO-approach will probably fix this issue.)
+- [X] Unmerged pdf-files can't be saved. (OO-approach will probably fix this issue.)
