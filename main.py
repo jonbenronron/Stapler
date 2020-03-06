@@ -12,6 +12,33 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
+#################
+#   Classes     #
+#################
+
+
+class PDF:
+
+     def __init__(self, home):
+         self.inputPdf = PdfFileReader(self.home, "rb")
+         self.docInfo = inputPdf.getDocumentInfo()
+         self.home = home
+         self.author = docInfo.author
+         self.title = docInfo.title
+         self.numPages = inputPdf.getNumPages()
+         self.pages = self.pages()  # List of page objects
+
+    @property
+    def pages(self):
+        return self.pages
+    
+    @pages.setter
+    def pages(self):
+        self.pages = []
+        for p in range(self.numPages):
+            self.pages.append(self.inputPdf.getPage(p))
+
+
 #############
 #   Init    #
 #############
@@ -21,7 +48,7 @@ index = 0  # Number of items in files list.
 
 pdf_merge = PdfFileMerger()  # Not sure if I keep this here.
 
-#   Initializing a app window.
+#   Initializing a window for the app.
 window = tk.Tk()
 window.title("Stapler - A pdf-file merger")
 window.rowconfigure(1, minsize=600, weight=1)
