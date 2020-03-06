@@ -22,8 +22,9 @@ at same directory as the main.py is located. Of course you can create one yourse
 If program is not able to find one, it will give you an error message.
 
 ### Future plans:
+- [ ] Object oriented approach. (Working with this at the moment.)
 - [ ] Split feature that allows user to split a page from pdf when needed.
 - [ ] Make it executable stapler.exe (windows) and stapler.app (mac).
 
 ### Known bugs:
-- [ ] Unmerged pdf-files can't be saved.
+- [ ] Unmerged pdf-files can't be saved. (OO-approach will probably fix this issue.)
