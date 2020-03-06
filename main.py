@@ -8,7 +8,7 @@
 
 import os
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
@@ -22,6 +22,17 @@ index = 0  # Number of items in files list.
 #################
 #   Classes     #
 #################
+
+# Class for the Stapler application.
+
+
+class Stapler(tk.Frame):
+
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.pack()
+
+# Class for pdf files.
 
 
 class Pdf:
@@ -73,29 +84,42 @@ class Pdf:
 #   Init    #
 #############
 
-pdf_merge = PdfFileMerger()  # Not sure if I keep this here.
+# Initializing a window for the app.
+stapler = Stapler()
+stapler.master.title("Stapler - A merge app for pdf files")
+stapler.rowconfigure(1, minsize=600, weight=1)
+stapler.columnconfigure(1, minsize=800, weight=1)
 
-#   Initializing a window for the app.
-window = tk.Tk()
-window.title("Stapler - A pdf-file merger")
-window.rowconfigure(1, minsize=600, weight=1)
-window.columnconfigure(1, minsize=800, weight=1)
-
-#   List widget.
-ls_files = tk.Listbox(master=window, activestyle='dotbox',
+# List widget.
+ls_files = tk.Listbox(master=stapler, activestyle='dotbox',
                       selectmode=tk.EXTENDED)
 
-#   Entry for naming the pdf.
-lb_name = tk.Label(master=window, text="Pdf title")
-pdfname = tk.StringVar(master=window)
-ent_name = ttk.Entry(master=window, textvariable=pdfname)
+# Entry for naming the new pdf file.
+lb_name = tk.Label(master=stapler, text="Pdf title")
+pdfname = tk.StringVar(master=stapler)
+ent_name = ttk.Entry(master=stapler, textvariable=pdfname)
 
 
 #################
 #   Functions   #
 #################
 
-#   Function for import button
+# Function for warning.
+
+def message(type, title, message):
+    if type == "info":
+        messagebox.showinfo(title, message)
+    elif type == "warning":
+        messagebox.showwarning(title, message)
+    elif type == "error":
+        messagebox.showerror(title, message)
+    elif type == "yesno":
+        messagebox.askyesno(title, message)
+    else:
+        pass
+
+
+# Function for import button.
 
 
 def import_file():
@@ -106,77 +130,100 @@ def import_file():
     pdf = Pdf(filepath=path)
     if not path:
         return
-    files.append((pdf.filename, pdf))
+    files.append(pdf)
     print(files)
     ls_files.insert(index, pdf.filename)
     index += 1
 
 
-#   Function for delete button
+# Function for delete button.
 
 
 def delete_file():
-    # List of selected items indices
+    global index
+    # List of selected items indices.
     selected_indices = list(ls_files.curselection())
-    # Items has to be deleted in reversed order to avoid an IndexError
+    if len(selected_indices) == 0:
+        return
+    # Items have to be deleted in reversed order to avoid an IndexError.
     selected_indices.reverse()
     print(selected_indices)
     for i in selected_indices:
         print(i)
         ls_files.delete(i, last=None)
         del files[i]
-        global index
         if index > 0:
             index -= 1
 
 
-#   Function for merge button
+# Function for merge button.
 
 
 def merge_files():
     global index
-    global pdf_merge
+    pdf_merge = PdfFileMerger()
+
+    # Check if any files are selected on the listbox.
     if ls_files.curselection():
+        # Check if title entry is empty.
         if ent_name.get() == "":
-            print("File has no title.")
+            # When empty give an error and return from merge function.
+            message("error", "No title", "File has no title")
             return
         else:
+            # When user has given a title for the new pdf file,
+            # function will merge over selected items.
             selected_indices = list(ls_files.curselection())
             print(selected_indices)
             for i in selected_indices:
                 global files
-                f = files[i][1]
-                print(f)
-                pdf_merge.append(fileobj=f)
-            selected_indices.reverse()
-            for i in selected_indices:
-                ls_files.delete(i, last=None)
-                del files[i]
-                if index > 0:
-                    index -= 1
-            name = ent_name.get()
+                file = files[i]
+                pdf_merge.append(fileobj=file.filepath)
+
+            # Check if user wants to keep old pdf files on the list.
+            answer = message("yesno", "Keep old files?",
+                             "Do you want to keep old pdf files?")
+            if answer != True:
+                # If not,
+                # files will be removed in reversed order
+                # to avoid any indexing errors.
+                selected_indices.reverse()
+                for i in selected_indices:
+                    ls_files.delete(i, last=None)
+                    del files[i]
+                    if index > 0:
+                        index -= 1
+
             try:
-                os.remove('temp/temp.pdf')
+                # Try to remove previous temporary files.
+                os.remove('temp.pdf')
             except OSError as e:
+                # If no temporary files exists give an error.
                 print("Error: %s - %s." % (e.filename, e.strerror))
-            with open('temp/temp.pdf', 'wb') as temp:
+            # Make the new pdf file into temporary form.
+            with open('temp.pdf', 'wb') as temp:
                 pdf_merge.write(temp)
-            file = PdfFileReader('temp/temp.pdf')
-            pdf = [name, file]
+
+            # Name of the new pdf file
+            name = ent_name.get()
+            pdf = Pdf('temp.pdf', name)
             files.append(pdf)
-            ls_files.insert(index, name)
-            ls_files.activate(index)
+            ls_files.insert(index, pdf.filename)
             index += 1
     else:
         return
 
 
-#   Function for save button
+# Function for save button.
 
 
 def save_file():
-    global pdf_merge
+    global files
+    global ls_files
+    pdf_writer = PdfFileWriter()
     if ls_files.curselection() and len(ls_files.curselection()) == 1:
+        file = files[ls_files.curselection()]
+        path = file.filepath
         filepath = asksaveasfilename(
             defaultextension="pdf",
             filetypes=[("Pdf Files", "*.pdf")],
@@ -184,9 +231,9 @@ def save_file():
         if not filepath:
             return
         with open(filepath, "wb") as output:
-            pdf_merge.write(output)
+            pdf_writer.write(output)
         try:
-            os.remove('temp/temp.pdf')
+            os.remove('temp.pdf')
         except OSError as e:
             print("Error: %s - %s." % (e.filename, e.strerror))
     else:
@@ -197,8 +244,9 @@ def save_file():
 #   Init for buttons    #
 #########################
 
-#   Buttons are initialized here because they need functions to be defined
-fr_buttons = tk.Frame(master=window, relief=tk.RAISED, bd=2)
+# Buttons are initialized here because they need functions
+# to be defined.
+fr_buttons = tk.Frame(master=stapler, relief=tk.RAISED, bd=2)
 btn_import = tk.Button(master=fr_buttons,
                        text="Import",
                        command=import_file)
@@ -212,13 +260,12 @@ btn_save = tk.Button(master=fr_buttons,
                      text="Save",
                      command=save_file)
 
-#   Positions of the buttons
-btn_import.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
-btn_delete.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
-btn_merge.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
-btn_save.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
 
-#   The layout of the program
+##################
+#   The layout   #
+##################
+
+# Position of widgets.
 fr_buttons.grid(row=1, column=0,
                 rowspan=1, columnspan=1,
                 sticky="nesw")
@@ -232,18 +279,27 @@ ent_name.grid(row=0, column=1,
               rowspan=1, columnspan=2,
               sticky="nesw")
 
+# Positions of the buttons.
+btn_import.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
+btn_delete.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+btn_merge.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+btn_save.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
+
 #################
 #   Main loop   #
 #################
 
-window.mainloop()
+stapler.mainloop()
 
 #################
 #   Clean up    #
 #################
 
 try:
-    os.remove('temp/temp.pdf')  # Any temporary files has to be removed
+    # Any unsaved temporary files will be removed.
+    os.remove('temp.pdf')
 except OSError as e:
-    # temp directory is empty or does not exist
+    # Temporary file does not exist.
     print("Error: %s - %s." % (e.filename, e.strerror))
+
+# Exit the program.
