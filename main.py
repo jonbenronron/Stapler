@@ -17,21 +17,31 @@ from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 #################
 
 
-class PDF:
+class Pdf:
 
-     def __init__(self, home):
-         self.inputPdf = PdfFileReader(self.home, "rb")
-         self.docInfo = inputPdf.getDocumentInfo()
-         self.home = home
-         self.author = docInfo.author
-         self.title = docInfo.title
-         self.numPages = inputPdf.getNumPages()
-         self.pages = self.pages()  # List of page objects
+    def __init__(self, state):
+        if state == "load":
+            self.filepath()
+        self.inputPdf = PdfFileReader(self.filepath, "rb")
+        self.docInfo = inputPdf.getDocumentInfo()
+        self.author = docInfo.author
+        self.title = docInfo.title
+        self.numPages = self.inputPdf.getNumPages()
+        self.pages()  # List of page objects
+
+    @property
+    def filepath(self):
+        return self.filepath
 
     @property
     def pages(self):
         return self.pages
-    
+
+    @filepath.load
+    def filepath(self):
+        self.filepath = askopenfilename(
+            filetypes=[("Pdf Files", "*.pdf"), ("All Files", "*.*")])
+
     @pages.setter
     def pages(self):
         self.pages = []
@@ -42,6 +52,7 @@ class PDF:
 #############
 #   Init    #
 #############
+pdf = Pdf()
 
 files = []  # List of pdf-files.
 index = 0  # Number of items in files list.
