@@ -26,46 +26,47 @@ index = 0  # Number of items in files list.
 
 class Pdf:
 
-    def __init__(self, state="load", filepath=None, filename=None, pages=[]):
-        self.state = state
+    def __init__(self, filepath=None, filename=None, pages=[]):
         self.filepath = filepath
         self.inputPdf = PdfFileReader(self.filepath, "rb")
-        self.docInfo = inputPdf.getDocumentInfo()
-        self.author = docInfo.author
-        self.title = docInfo.title
-        self.fileName = fileName
+        self.docInfo = self.inputPdf.getDocumentInfo()
+        self.author = self.docInfo.author
+        self.title = self.docInfo.title
+        self.filename = filename
         self.numPages = self.inputPdf.getNumPages()
         self.pages = pages  # List of page objects
 
     @property
     def filepath(self):
-        return self.filepath
+        return self.path
 
     @property
-    def fileName(self):
-        return self.fileName
+    def filename(self):
+        return self.name
 
     @property
     def pages(self):
-        return self.pages
+        return self.pg
 
     @filepath.setter
-    def filepath(self, value):
-        if self.state == "load":
-            self.filepath = askopenfilename(
-                filetypes=[("Pdf Files", "*.pdf"), ("All Files", "*.*")])
+    def filepath(self, filepath):
+        self.path = filepath
 
-    @fileName.setter
-    def fileName(self, value):
-        directories = self.filepath.split("/")
-        file_name = directories[len(directories) - 1].split(".")
-        name = file_name[0]
+    @filename.setter
+    def filename(self, filename):
+        if filename == None:
+            directories = self.filepath.split("/")
+            dirlist = directories[len(directories) - 1].split(".")
+            self.name = dirlist[0]
+        else:
+            self.name = filename
 
     @pages.setter
-    def pages(self, value):
-        self.pages = []
+    def pages(self, pages):
+        pages = []
         for p in range(self.numPages):
-            self.pages.append(self.inputPdf.getPage(p))
+            pages.append(self.inputPdf.getPage(p))
+        self.pg = pages
 
 
 #############
@@ -98,19 +99,16 @@ ent_name = ttk.Entry(master=window, textvariable=pdfname)
 
 
 def import_file():
-
     global files
     global index
-    pdf = Pdf()
-
-    if not pdf.filepath:
+    path = askopenfilename(
+        filetypes=[("Pdf Files", "*.pdf"), ("All Files", "*.*")])
+    pdf = Pdf(filepath=path)
+    if not path:
         return
-
-    files.append((pdf.fileName, pdf))
+    files.append((pdf.filename, pdf))
     print(files)
-
-    ls_files.insert(index, name)
-    ls_files.activate(index)
+    ls_files.insert(index, pdf.filename)
     index += 1
 
 
