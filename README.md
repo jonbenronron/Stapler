@@ -1,5 +1,7 @@
 # Stapler
-Pdf merge app with simple GUI (work in progress).. <br/>
+Application that allows user to merge and split pdf files with each other. <br/>
+
+### Dependences
 Pdf handling is done with PyPDF2. <br/>
 GUI is done with tkinter. <br/>
 
