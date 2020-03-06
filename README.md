@@ -1,5 +1,5 @@
 # Stapler
-Application that allows user to merge and split pdf files with each other. <br/>
+Application that allows user to merge (and split in future) pdf files with each other. <br/>
 
 ### Dependences
 Pdf handling is done with PyPDF2. <br/>
