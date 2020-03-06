@@ -12,6 +12,13 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
+#########################
+#   GLOBAL VARIABLES    #
+#########################
+
+files = []  # List of pdf-files.
+index = 0  # Number of items in files list.
+
 #################
 #   Classes     #
 #################
@@ -19,31 +26,43 @@ from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
 class Pdf:
 
-    def __init__(self, state):
-        if state == "load":
-            self.filepath()
+    def __init__(self, state="load", filepath=None, filename=None, pages=[]):
+        self.state = state
+        self.filepath = filepath
         self.inputPdf = PdfFileReader(self.filepath, "rb")
         self.docInfo = inputPdf.getDocumentInfo()
         self.author = docInfo.author
         self.title = docInfo.title
+        self.fileName = fileName
         self.numPages = self.inputPdf.getNumPages()
-        self.pages()  # List of page objects
+        self.pages = pages  # List of page objects
 
     @property
     def filepath(self):
         return self.filepath
 
     @property
+    def fileName(self):
+        return self.fileName
+
+    @property
     def pages(self):
         return self.pages
 
-    @filepath.load
-    def filepath(self):
-        self.filepath = askopenfilename(
-            filetypes=[("Pdf Files", "*.pdf"), ("All Files", "*.*")])
+    @filepath.setter
+    def filepath(self, value):
+        if self.state == "load":
+            self.filepath = askopenfilename(
+                filetypes=[("Pdf Files", "*.pdf"), ("All Files", "*.*")])
+
+    @fileName.setter
+    def fileName(self, value):
+        directories = self.filepath.split("/")
+        file_name = directories[len(directories) - 1].split(".")
+        name = file_name[0]
 
     @pages.setter
-    def pages(self):
+    def pages(self, value):
         self.pages = []
         for p in range(self.numPages):
             self.pages.append(self.inputPdf.getPage(p))
@@ -52,10 +71,6 @@ class Pdf:
 #############
 #   Init    #
 #############
-pdf = Pdf()
-
-files = []  # List of pdf-files.
-index = 0  # Number of items in files list.
 
 pdf_merge = PdfFileMerger()  # Not sure if I keep this here.
 
@@ -66,8 +81,7 @@ window.rowconfigure(1, minsize=600, weight=1)
 window.columnconfigure(1, minsize=800, weight=1)
 
 #   List widget.
-ls_files = tk.Listbox(master=window,
-                      activestyle='dotbox',
+ls_files = tk.Listbox(master=window, activestyle='dotbox',
                       selectmode=tk.EXTENDED)
 
 #   Entry for naming the pdf.
@@ -84,27 +98,20 @@ ent_name = ttk.Entry(master=window, textvariable=pdfname)
 
 
 def import_file():
-    filepath = askopenfilename(
-        filetypes=[("Pdf Files", "*.pdf"), ("All Files", "*.*")]
-    )
-    if not filepath:
+
+    global files
+    global index
+    pdf = Pdf()
+
+    if not pdf.filepath:
         return
-    with open(filepath, "r") as input_file:
-        global files
-        file = PdfFileReader(filepath)
-        directories = filepath.split("/")
-        print(directories)
-        file_name = directories[len(directories) - 1].split(".")
-        print(file_name)
-        name = file_name[0]
-        print(name)
-        pdf_reader = [name, file]
-        files.append(pdf_reader)
-        print(files)
-        global index
-        ls_files.insert(index, name)
-        ls_files.activate(index)
-        index += 1
+
+    files.append((pdf.fileName, pdf))
+    print(files)
+
+    ls_files.insert(index, name)
+    ls_files.activate(index)
+    index += 1
 
 
 #   Function for delete button
