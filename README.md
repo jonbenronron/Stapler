@@ -27,3 +27,4 @@ At this point Stapler won't run without 'tkinter' and 'pypdf2' packages.
 
 ### Known bugs:
 - [X] Unmerged pdf-files can't be saved. (OO-approach will probably fix this issue.)
+- [ ] Saving has some issues.
