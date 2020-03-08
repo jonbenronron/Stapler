@@ -5,15 +5,35 @@
     Date:       8.3.2020
 """
 
-#################
-#   PACKAGES    #
-#################
+################
+#   IMPORTS    #
+################
 
+# Standard library imports
+import sys
 import os
-import tkinter as tk
-from tkinter import ttk, messagebox
-from tkinter.filedialog import askopenfilename, asksaveasfilename
-from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
+
+# Try to import tkinter and pypdf2 packages
+try:
+    import tkinter as tk
+    from tkinter import ttk, messagebox
+    from tkinter.filedialog import askopenfilename, asksaveasfilename
+except ImportError as e:
+    # Command to upgrade pip
+    print("python -m pip install pip --upgrade")
+    # Command to install tkinter
+    print("python -m pip install tkinter")
+    # Exit the program
+    sys.exit()
+try:
+    from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
+except ImportError as e:
+    # Command to upgrade pip
+    print("python -m pip install pip --upgrade")
+    # Command to install PyPDF2
+    print("python -m pip install pypdf2")
+    # Exit the program
+    sys.exit()
 
 #########################
 #   GLOBAL VARIABLES    #
@@ -22,9 +42,9 @@ from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 files = []  # List of pdf-files.
 index = 0  # Number of items in files list.
 
-#################
-#   Classes     #
-#################
+###############
+#   CLASSES   #
+###############
 
 # Class for the Stapler application.
 
@@ -83,9 +103,9 @@ class Pdf:
         self.pg = pages
 
 
-#############
-#   Init    #
-#############
+############
+#   INIT   #
+############
 
 # Initializing a window for the app.
 stapler = Stapler()
@@ -104,7 +124,7 @@ ent_name = ttk.Entry(master=stapler, textvariable=pdfname)
 
 
 #################
-#   Functions   #
+#   FUNCTIONS   #
 #################
 
 # Function for warning.
@@ -252,9 +272,9 @@ def save_file():
         return
 
 
-#########################
-#   Init for buttons    #
-#########################
+########################
+#   INIT FOR BUTTONS   #
+########################
 
 # Buttons are initialized here because they need functions
 # to be defined.
@@ -274,7 +294,7 @@ btn_save = tk.Button(master=fr_buttons,
 
 
 ##################
-#   The layout   #
+#   THE LAYOUT   #
 ##################
 
 # Position of widgets.
@@ -298,13 +318,13 @@ btn_merge.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
 btn_save.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
 
 #################
-#   Main loop   #
+#   MAIN LOOP   #
 #################
 
 stapler.mainloop()
 
 #################
-#   Clean up    #
+#   CLEAN UP    #
 #################
 
 try:
@@ -315,3 +335,5 @@ except OSError as e:
     print("Error: %s - %s." % (e.filename, e.strerror))
 
 # Exit the program.
+exitMsg = "Thank you for using Stapler!"
+sys.exit(exitMsg)
