@@ -2,8 +2,8 @@
 Application that allows its user to merge (and in future split) pdf files with each other. <br/>
 
 ### Dependences
-Pdf handling is done with PyPDF2. <br/>
-GUI is done with tkinter. (Included in python standard library.) <br/>
+Pdf editin and manipulation is done with [PyPDF2](https://pypi.org/project/PyPDF2/). <br/>
+GUI is done with Tkinter. (Included in python standard library.) <br/>
 
 ### How to:
 1. Download and install python 3 from [Python](https://www.python.org/), if it's not installed. <br/>
@@ -16,7 +16,7 @@ GUI is done with tkinter. (Included in python standard library.) <br/>
 5. Program should start working now. <br/>
 
 ### Notes:
-- Program will automatically ensure [pip](https://pypi.org/project/pip/) and install [PyPDF2](https://pypi.org/project/PyPDF2/) package if it's not already installed on your computer.
+- Program will automatically ensure [pip](https://pypi.org/project/pip/) and install PyPDF2 package if it's not already installed on your computer.
 In future this is not needed because executable version of application will include all packages you need to run it.
 
 ### Future plans:
