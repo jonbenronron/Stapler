@@ -10,16 +10,16 @@
 ################
 
 # Standard library imports
-import sys
-import os
-import tkinter as tk
+import sys  # System
+import os   # Operating system
+import tkinter as tk    # Tkinter ~ Pythons standard GUI library
 
 from tkinter import ttk, messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 # Try to import PyPDF2
 try:
-    # Update PyPDF2 package
+    # Update PyPDF2 library
     if os.name == "nt":
         command = "python -m pip install pypdf2 --upgrade"
     else:
@@ -37,7 +37,7 @@ except ImportError:
         # Command to upgrade pip
         command = "python -m pip install pip --upgrade"
         os.system(command)
-        # Command to install tkinter
+        # Command to install PyPDF2
         command = "python -m pip install pypdf2"
         os.system(command)
 
@@ -46,7 +46,7 @@ except ImportError:
         # Command to upgrade pip
         command = "pip install pip --upgrade"
         os.system(command)
-        # Command to install tkinter
+        # Command to install PyPDF2
         command = "pip install pypdf2"
         os.system(command)
 
@@ -166,6 +166,7 @@ def message(type, title, message):
 def import_file():
     global files
     global index
+
     path = askopenfilename(
         filetypes=[("Pdf Files", "*.pdf"), ("All Files", "*.*")])
     pdf = Pdf(filepath=path)
@@ -182,6 +183,7 @@ def import_file():
 
 def delete_file():
     global index
+
     # List of selected items indices.
     selected_indices = list(ls_files.curselection())
     if len(selected_indices) == 0:
