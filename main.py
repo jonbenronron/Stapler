@@ -12,28 +12,47 @@
 # Standard library imports
 import sys
 import os
+import tkinter as tk
 
-# Try to import tkinter and pypdf2 packages
+from tkinter import ttk, messagebox
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+
+# Try to import PyPDF2
 try:
-    import tkinter as tk
-    from tkinter import ttk, messagebox
-    from tkinter.filedialog import askopenfilename, asksaveasfilename
-except ImportError as e:
-    # Command to upgrade pip
-    print("python -m pip install pip --upgrade")
-    # Command to install tkinter
-    print("python -m pip install tkinter")
-    # Exit the program
-    sys.exit()
-try:
+    # Update PyPDF2 package
+    if os.name == "nt":
+        command = "python -m pip install pypdf2 --upgrade"
+    else:
+        command = "pip install pypdf2 --upgrade"
+
+    os.system(command)
+
     from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
-except ImportError as e:
-    # Command to upgrade pip
-    print("python -m pip install pip --upgrade")
-    # Command to install PyPDF2
-    print("python -m pip install pypdf2")
+
+# If PyPDF2 is not installed
+except ImportError:
+
+    # If operating system is windows
+    if os.name == "nt":
+        # Command to upgrade pip
+        command = "python -m pip install pip --upgrade"
+        os.system(command)
+        # Command to install tkinter
+        command = "python -m pip install pypdf2"
+        os.system(command)
+
+    # If operating system is not windows
+    else:
+        # Command to upgrade pip
+        command = "pip install pip --upgrade"
+        os.system(command)
+        # Command to install tkinter
+        command = "pip install pypdf2"
+        os.system(command)
+
     # Exit the program
     sys.exit()
+
 
 #########################
 #   GLOBAL VARIABLES    #
@@ -89,9 +108,8 @@ class Pdf:
     @filename.setter
     def filename(self, filename):
         if filename == None:
-            directories = self.filepath.split("/")
-            dirlist = directories[len(directories) - 1].split(".")
-            self.name = dirlist[0]
+            name = os.path.basename(self.filepath)
+            self.name = name.split(".")[0]
         else:
             self.name = filename
 
