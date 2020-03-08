@@ -10,7 +10,7 @@ GUI (general user interface) is created with Tkinter. (Included in python standa
 2. Download and put the Stapler to a directory of your choice. <br/>
 3. Open command prompt and navigate to the directory that contains the `main.py` file. Example: <br/>
   - Windows: `cd C:/path/to/Stapler`
-  - Mac/Linux: `cd root/path/to/Stapler`
+  - Mac/Linux: `cd root/absolute/path/to/Stapler`
 4. Write following command: <br/>
   - `python main.py`
 5. Program should start working now. <br/>
