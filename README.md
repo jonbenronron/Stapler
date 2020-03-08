@@ -21,7 +21,7 @@ In future this is not needed because executable version of application will incl
 
 ### Future plans:
 - [X] Object oriented approach. (Working with this at the moment.)
-- [ ] Split feature that allows user to copy a page or several pages from pdf file and creates a new pdf file from it or them.
+- [ ] Split feature that allows user to copy a page or several pages from pdf file and creates a new pdf file from them.
 - [ ] Make it executable stapler.exe (windows) and stapler.app (mac).
 - [ ] Change file maintenance from list into sqlite3 data bases.
 
