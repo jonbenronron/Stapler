@@ -60,6 +60,7 @@ class Stapler(tk.Frame):
         super().__init__(master)
         self.pack()
 
+
 # Class for pdf files.
 
 
@@ -168,6 +169,7 @@ def import_file():
 
 
 def delete_file():
+    global files
     global index
 
     # List of selected items indices.
@@ -189,6 +191,7 @@ def delete_file():
 
 
 def merge_files():
+    global files
     global index
     pdf_merge = PdfFileMerger()
 
@@ -205,7 +208,6 @@ def merge_files():
             selected_indices = list(ls_files.curselection())
             print(selected_indices)
             for i in selected_indices:
-                global files
                 file = files[i]
                 pdf_merge.append(fileobj=file.filepath)
 
@@ -243,6 +245,55 @@ def merge_files():
         return
 
 
+# Function for split button.
+
+
+def split_file():
+    global files
+    global index
+    global ls_files
+    pdf_writer = PdfFileWriter()
+
+    # Tuple of selected files
+    selected = ls_files.curselection()
+    # Split only if one item is selected
+    if selected and len(selected) == 1:
+        # Pick the file from 'selected' tuple
+        file = files[selected[0]]
+        pNum = file.numPages
+
+        top = tk.Toplevel()
+        top.title("Select pages")
+
+        split_msg = str(
+            "Choose a page or range of pages to be split from '" + file.filename + "' file.")
+        msg = tk.Message(master=top, text=split_msg)
+        msg.pack(side="top")
+
+        page_in_list = tk.StringVar(master=top)
+        page_list = tk.Listbox(master=top,
+                               height=10,
+                               selectmode=tk.EXTENDED,
+                               listvariable=page_in_list)
+        scrollbar = tk.Scrollbar(master=top,
+                                 orient="vertical")
+        scrollbar.config(command=page_list.yview)
+        scrollbar.pack(side="right",
+                       fill="y")
+        page_list.config(yscrollcommand=scrollbar.set)
+        for i in range(pNum):
+            page_list.insert(i, "page. " + str(i + 1))
+        page_list.pack(side="left")
+
+        canvas = tk.Canvas(master=top)
+        canvas.pack(side="right")
+        if not page_list.curselection():
+            img = file.pages[0]
+        button = tk.Button(master=top,
+                           text="Split",
+                           command=top.destroy)
+        button.pack(side="bottom")
+
 # Function for save button.
 
 
@@ -250,11 +301,12 @@ def save_file():
     global files
     global ls_files
     pdf_writer = PdfFileWriter()
+
     # Tuple of selected files
     selected = ls_files.curselection()
     # Save only if one item is selected
     if selected and len(selected) == 1:
-        # Pick the file from selected tuple
+        # Pick the file from 'selected' tuple
         file = files[selected[0]]
         # Ask user where the file is going to be saved
         filepath = asksaveasfilename(
@@ -294,6 +346,9 @@ btn_delete = tk.Button(master=fr_buttons,
 btn_merge = tk.Button(master=fr_buttons,
                       text="Merge",
                       command=merge_files)
+btn_split = tk.Button(master=fr_buttons,
+                      text="Split",
+                      command=split_file)
 btn_save = tk.Button(master=fr_buttons,
                      text="Save",
                      command=save_file)
@@ -321,7 +376,8 @@ ent_name.grid(row=0, column=1,
 btn_import.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 btn_delete.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
 btn_merge.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
-btn_save.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
+btn_split.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
+btn_save.grid(row=4, column=0, sticky="ew", padx=5, pady=5)
 
 #################
 #   MAIN LOOP   #
