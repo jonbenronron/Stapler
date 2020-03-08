@@ -23,7 +23,7 @@ In future this is not needed because executable version of application will incl
 - [X] Object oriented approach. (Working with this at the moment.)
 - [ ] Split feature that allows user to split a page from pdf when needed.
 - [ ] Make it executable stapler.exe (windows) and stapler.app (mac).
-- [ ] Change file handling into sqlite data bases.
+- [ ] Change file maintenance from list into sqlite3 data bases.
 
 ### Known bugs:
 - [X] Unmerged pdf-files can't be saved. (OO-approach will probably fix this issue.)
