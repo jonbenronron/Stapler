@@ -1,6 +1,9 @@
-#   Author:     Roni Keuru
-#   Licence:    Open source GNU General Public License v3.0
-#   Date:       4.3.2020
+"""
+    Program:    Stapler
+    Author:     Roni Keuru
+    Licence:    Open source GNU General Public License v3.0
+    Date:       8.3.2020
+"""
 
 #################
 #   PACKAGES    #
@@ -90,11 +93,11 @@ stapler.master.title("Stapler - A merge app for pdf files")
 stapler.rowconfigure(1, minsize=600, weight=1)
 stapler.columnconfigure(1, minsize=800, weight=1)
 
-# Listbox widget.
+# Listbox widget to let user select usable pdf file items.
 ls_files = tk.Listbox(master=stapler, activestyle='dotbox',
                       selectmode=tk.EXTENDED)
 
-# Entry for naming the new pdf file.
+# Entry widget for naming the new pdf file.
 lb_name = tk.Label(master=stapler, text="Pdf title")
 pdfname = tk.StringVar(master=stapler)
 ent_name = ttk.Entry(master=stapler, textvariable=pdfname)
@@ -240,7 +243,7 @@ def save_file():
         # Write out the pdf file
         with open(filepath, "wb") as output:
             pdf_writer.write(output)
-        # Remove now unnecessary temporary pdf files
+        # Remove unnecessary temporary pdf files
         try:
             os.remove('temp.pdf')
         except OSError as e:
