@@ -12,14 +12,14 @@
 # Standard library imports
 import sys  # System
 import os   # Operating system
-import tkinter as tk    # Tkinter ~ Pythons standard GUI library
+import tkinter as tk    # Tkinter ~ Pythons standard GUI package
 
 from tkinter import ttk, messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 # Try to import PyPDF2
 try:
-    # Update PyPDF2 library
+    # Update PyPDF2 package
     if os.name == "nt":
         command = "python -m pip install pypdf2 --upgrade"
     else:
@@ -32,26 +32,12 @@ try:
 # If PyPDF2 is not installed
 except ImportError:
 
-    # If operating system is windows
-    if os.name == "nt":
-        # Command to upgrade pip
-        command = "python -m pip install pip --upgrade"
-        os.system(command)
-        # Command to install PyPDF2
-        command = "python -m pip install pypdf2"
-        os.system(command)
-
-    # If operating system is not windows
-    else:
-        # Command to upgrade pip
-        command = "pip install pip --upgrade"
-        os.system(command)
-        # Command to install PyPDF2
-        command = "pip install pypdf2"
-        os.system(command)
-
-    # Exit the program
-    sys.exit()
+    # Command to install and/or upgrade pip (Python package index)
+    command = "python -m ensurepip --upgrade"
+    os.system(command)
+    # Command to install PyPDF2
+    command = "python -m pip install pypdf2"
+    os.system(command)
 
 
 #########################
