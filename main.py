@@ -1,5 +1,5 @@
 """
-    Program:    Stapler
+    Program:    Stapler - A Simple Pdf File Editor
     Author:     Roni Keuru
     Licence:    Open source GNU General Public License v3.0
     Date:       8.3.2020
