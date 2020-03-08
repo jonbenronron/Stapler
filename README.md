@@ -16,7 +16,7 @@ GUI is done with tkinter. (Included in python standard library.) <br/>
 5. Program should start working now. <br/>
 
 ### Notes:
-- Program will ensure [pip](https://pypi.org/project/pip/) and automaticly install [PyPDF2](https://pypi.org/project/PyPDF2/) package if it's not already installed.
+- Program will automatically ensure [pip](https://pypi.org/project/pip/) and install [PyPDF2](https://pypi.org/project/PyPDF2/) package if it's not already installed.
 In future this is not needed because executable version of application will include all packages you need to run it.
 
 ### Future plans:
