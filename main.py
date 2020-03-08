@@ -113,7 +113,7 @@ class Pdf:
 
 # Initializing a window for the app.
 stapler = Stapler()
-stapler.master.title("Stapler - A merge app for pdf files")
+stapler.master.title("Stapler - A Simple Pdf File Editor")
 stapler.rowconfigure(1, minsize=600, weight=1)
 stapler.columnconfigure(1, minsize=800, weight=1)
 
