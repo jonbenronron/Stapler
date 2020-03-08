@@ -2,7 +2,7 @@
 Application that allows its user to merge (and in future split) pdf files with each other. <br/>
 
 ### Dependences
-Pdf editin and manipulation is done with [PyPDF2](https://pypi.org/project/PyPDF2/). <br/>
+Pdf file manipulation is done with [PyPDF2](https://pypi.org/project/PyPDF2/). <br/>
 GUI is done with Tkinter. (Included in python standard library.) <br/>
 
 ### How to:
