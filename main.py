@@ -1,5 +1,5 @@
 """
-    Program:    Stapler - A Simple Pdf File Editor
+    Program:    Stapler - Simple Pdf File Editor
     Author:     Roni Keuru
     Licence:    Open source GNU General Public License v3.0
     Date:       8.3.2020
@@ -113,7 +113,7 @@ class Pdf:
 
 # Initializing a window for the app.
 stapler = Stapler()
-stapler.master.title("Stapler - A Simple Pdf File Editor")
+stapler.master.title("Stapler - Simple Pdf File Editor")
 stapler.rowconfigure(1, minsize=600, weight=1)
 stapler.columnconfigure(1, minsize=800, weight=1)
 
