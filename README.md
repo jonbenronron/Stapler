@@ -8,7 +8,7 @@ GUI is done with tkinter. (Included in python standard library.) <br/>
 ### How to:
 1. Download and install python 3 from [Python](https://www.python.org/), if not installed. <br/>
 2. Download and put the Stapler to a directory of your choice. <br/>
-3. Open command prompt and navigate to the directory that contains the main.py file. Example: <br/>
+3. Open command prompt and navigate to the directory that contains the `main.py` file. Example: <br/>
   - Windows: `cd C:/path/to/Stapler`
   - Mac/Linux: `cd root/path/to/Stapler`
 4. Write following command: <br/>
