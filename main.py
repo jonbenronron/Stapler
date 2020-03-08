@@ -336,4 +336,4 @@ except OSError as e:
 
 # Exit the program.
 exitMsg = "Thank you for using Stapler!"
-sys.exit(exitMsg)
+quit(exitMsg)
