@@ -1,4 +1,4 @@
-# Stapler
+# Stapler - Simple Pdf File Editor
 Application that allows its user to merge (and in future split) pdf files with each other. <br/>
 
 ### Dependences
