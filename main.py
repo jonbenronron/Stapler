@@ -90,7 +90,7 @@ stapler.master.title("Stapler - A merge app for pdf files")
 stapler.rowconfigure(1, minsize=600, weight=1)
 stapler.columnconfigure(1, minsize=800, weight=1)
 
-# List widget.
+# Listbox widget.
 ls_files = tk.Listbox(master=stapler, activestyle='dotbox',
                       selectmode=tk.EXTENDED)
 
@@ -221,17 +221,26 @@ def save_file():
     global files
     global ls_files
     pdf_writer = PdfFileWriter()
-    if ls_files.curselection() and len(ls_files.curselection()) == 1:
-        file = files[ls_files.curselection()]
-        path = file.filepath
+    # Tuple of selected files
+    selected = ls_files.curselection()
+    # Save only if one item is selected
+    if selected and len(selected) == 1:
+        # Pick the file from selected tuple
+        file = files[selected[0]]
+        # Ask user where the file is going to be saved
         filepath = asksaveasfilename(
             defaultextension="pdf",
             filetypes=[("Pdf Files", "*.pdf")],
         )
+        # Add pages together from from the pdf object
+        for page in file.pages:
+            pdf_writer.addPage(page)
         if not filepath:
             return
+        # Write out the pdf file
         with open(filepath, "wb") as output:
             pdf_writer.write(output)
+        # Remove now unnecessary temporary pdf files
         try:
             os.remove('temp.pdf')
         except OSError as e:
