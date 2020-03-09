@@ -45,6 +45,7 @@ except ImportError:
 #########################
 
 files = []  # List of pdf-files.
+lsPages = []  # List of pages
 index = 0  # Number of items in files list.
 
 ###############
@@ -193,6 +194,7 @@ def delete_file():
 def merge_files():
     global files
     global index
+    global ent_name
     pdf_merge = PdfFileMerger()
 
     # Check if any files are selected on the listbox.
@@ -231,7 +233,7 @@ def merge_files():
             except OSError as e:
                 # If no temporary files exists give an error.
                 print("Error: %s - %s." % (e.filename, e.strerror))
-            # Make the new pdf file into temporary form.
+            # Create a new pdf file into temporary form.
             with open('temp.pdf', 'wb') as temp:
                 pdf_merge.write(temp)
 
@@ -252,47 +254,80 @@ def split_file():
     global files
     global index
     global ls_files
+    global lsPages
+    global ent_name
     pdf_writer = PdfFileWriter()
+
+    for p in lsPages:
+        pdf_writer.addPage(p)
+
+    try:
+        # Try to remove previous temporary files.
+        os.remove('temp.pdf')
+    except OSError as e:
+        # If no temporary files exists give an error.
+        print("Error: %s - %s." % (e.filename, e.strerror))
+    # Create a new pdf file into temporary form.
+    with open('temp.pdf', 'wb') as temp:
+        pdf_writer.write(temp)
+
+    pdf = Pdf(filepath='temp.pdf', filename=ent_name)
+    files.append(pdf)
+    ls_files.insert(index, ent_name.get())
+    index += 1
+
+
+def split_window():
+    global files
+    global ls_files
+    global lsPages
 
     # Tuple of selected files
     selected = ls_files.curselection()
     # Split only if one item is selected
     if selected and len(selected) == 1:
-        # Pick the file from 'selected' tuple
-        file = files[selected[0]]
-        pNum = file.numPages
+        if not ent_name.get():
+            # When empty give an error and return from split_window function.
+            message("error", "No title", "File has no title")
+            return
+        else:
+            # Pick the file from 'selected' tuple
+            file = files[selected[0]]
+            pNum = file.numPages
 
-        top = tk.Toplevel()
-        top.title("Select pages")
+            top = tk.Toplevel()
+            top.title("Select pages")
 
-        split_msg = str(
-            "Choose a page or range of pages to be split from '" + file.filename + "' file.")
-        msg = tk.Message(master=top, text=split_msg)
-        msg.pack(side="top")
+            split_msg = str(
+                "Choose a page or range of pages to be split from '" + file.filename + "' file.")
+            msg = tk.Message(master=top, text=split_msg)
+            msg.pack(side="top")
 
-        page_in_list = tk.StringVar(master=top)
-        page_list = tk.Listbox(master=top,
-                               height=10,
-                               selectmode=tk.EXTENDED,
-                               listvariable=page_in_list)
-        scrollbar = tk.Scrollbar(master=top,
-                                 orient="vertical")
-        scrollbar.config(command=page_list.yview)
-        scrollbar.pack(side="right",
-                       fill="y")
-        page_list.config(yscrollcommand=scrollbar.set)
-        for i in range(pNum):
-            page_list.insert(i, "page. " + str(i + 1))
-        page_list.pack(side="left")
+            page_in_list = tk.StringVar(master=top)
+            page_list = tk.Listbox(master=top,
+                                   height=10,
+                                   selectmode=tk.EXTENDED,
+                                   listvariable=page_in_list)
+            scrollbar = tk.Scrollbar(master=top,
+                                     orient="vertical")
+            scrollbar.config(command=page_list.yview)
+            scrollbar.pack(side="right",
+                           fill="y")
+            page_list.config(yscrollcommand=scrollbar.set)
+            for i in range(pNum):
+                page_list.insert(i, "page. " + str(i + 1))
+            page_list.pack()
 
-        canvas = tk.Canvas(master=top)
-        canvas.pack(side="right")
-        if not page_list.curselection():
-            img = file.pages[0]
-        button = tk.Button(master=top,
-                           text="Split",
-                           command=top.destroy)
-        button.pack(side="bottom")
+            def selPages():
+                selected_pages = page_list.curselection()
+                for p in selected_pages:
+                    lsPages.append(file.pages[p])
+
+            button = tk.Button(master=top,
+                               text="Split")
+            button.config(command=lambda: [f()
+                                           for f in [selPages, split_file, top.destroy]])
+            button.pack()
 
 # Function for save button.
 
@@ -348,7 +383,7 @@ btn_merge = tk.Button(master=fr_buttons,
                       command=merge_files)
 btn_split = tk.Button(master=fr_buttons,
                       text="Split",
-                      command=split_file)
+                      command=split_window)
 btn_save = tk.Button(master=fr_buttons,
                      text="Save",
                      command=save_file)
