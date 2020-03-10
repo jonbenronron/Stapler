@@ -1,15 +1,19 @@
-"""
-    Program:    Stapler - Simple Pdf File Editor
+""" Program:    Stapler - Simple Pdf File Editor
     Author:     Roni Keuru
     Licence:    Open source GNU General Public License v3.0
-    Date:       8.3.2020
+    Date:       10.3.2020
+    
+    The purpose of the program is to let its user to import, merge, split and save pdf-files as easy as possible.
+    That's why I wanted to keep the general user interface as simple as possible.
+    
+    TODO: One way to clean up the code and make it safer would be spliting it up into seperate files.
 """
 
 ################
 #   IMPORTS    #
 ################
 
-# Standard library imports
+# * Imports of packages that are included in standard package library (std) of python.
 import sys  # System
 import os   # Operating system
 import tkinter as tk    # Tkinter ~ Pythons standard GUI package
@@ -17,9 +21,13 @@ import tkinter as tk    # Tkinter ~ Pythons standard GUI package
 from tkinter import ttk, messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
-# Try to import PyPDF2
+# * Imports of packages that are not included in std library.
 try:
-    # Update PyPDF2 package
+    """ Try to import PyPDF2 and update it after validating the operating system
+
+    TODO: These "automations" have to be removed for executable version
+    """
+
     if os.name == "nt":
         command = "python -m pip install pypdf2 --upgrade"
     else:
@@ -29,8 +37,14 @@ try:
 
     from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
-# If PyPDF2 is not installed
+
 except ImportError:
+    """ If PyPDF2 is not installed:
+        - Upgrade the pip
+        - Install PyPDF2
+
+    TODO:  These "automations" have to be removed for executable version
+    """
 
     # Command to install and/or upgrade pip (Python package index)
     command = "python -m ensurepip --upgrade"
@@ -44,30 +58,54 @@ except ImportError:
 #   GLOBAL VARIABLES    #
 #########################
 
+#!  These probably should belong inside Stapler class
 files = []  # List of pdf-files.
 lsPages = []  # List of pages
 index = 0  # Number of items in files list.
+
 
 ###############
 #   CLASSES   #
 ###############
 
-# Class for the Stapler application.
-
-
 class Stapler(tk.Frame):
+    """ Class for a Stapler application object.
+
+    Arguments:
+        tk {Frame} -- Creates a main loop window for the application
+
+    Returns:
+        Stapler -- [description]
+
+    !  The widgets and "global variablse" should probably be inside Stapler class
+    """
 
     def __init__(self, master=None):
+        """ Initialization of Stapler object.
+
+        Keyword Arguments:
+            master {Frame} -- [description] (default: {None})
+        """
         super().__init__(master)
         self.pack()
 
 
-# Class for pdf files.
-
-
 class Pdf:
+    """ Class for pdf files.
+
+    Returns:
+        Pdf -- Instance of Pdf class will have all critical features that are needed to manipulate it.
+    """
 
     def __init__(self, filepath=None, filename=None, pages=[]):
+        """ Initialization of Pdf object.
+
+        Keyword Arguments:
+            filepath {String} -- User will give a valid path to the pdf file. (default: {None})
+            filename {String} -- Name will be catenated and split from the 'filepath' string. (default: {None})
+            pages {list} -- Page objects will be iterated and listed in a for loop with PdfFileReader() (default: {[]})
+        """
+
         self.filepath = filepath
         self.inputPdf = PdfFileReader(self.filepath, "rb")
         self.docInfo = self.inputPdf.getDocumentInfo()
@@ -95,6 +133,11 @@ class Pdf:
 
     @filename.setter
     def filename(self, filename):
+        """ Setter for a filename variable.
+
+        Arguments:
+            filename {String} -- Basename of path of the file without the '.pdf' part will be the 'filename'.
+        """
         if filename == None:
             name = os.path.basename(self.filepath)
             self.name = name.split(".")[0]
@@ -103,6 +146,11 @@ class Pdf:
 
     @pages.setter
     def pages(self, pages):
+        """ Setter for a page list.
+
+        Arguments:
+            pages {list} -- For loop will iterate the pdf file and add all the PageObjects to the page list.
+        """
         pages = []
         for p in range(self.numPages):
             pages.append(self.inputPdf.getPage(p))
@@ -133,25 +181,33 @@ ent_name = ttk.Entry(master=stapler, textvariable=pdfname)
 #   FUNCTIONS   #
 #################
 
-# Function for warning.
-
 def message(type, title, message):
+    """ Function for message boxes.
+
+    Arguments:
+        type {String} -- Type of the message.
+        title {String} -- Title shown on top border of message box.
+        message {String} -- The content of the message.
+
+    Returns:
+        type {bool or None} -- The "answer" of messagebox.
+    """
+
     if type == "info":
-        messagebox.showinfo(title, message)
+        return messagebox.showinfo(title, message)
     elif type == "warning":
-        messagebox.showwarning(title, message)
+        return messagebox.showwarning(title, message)
     elif type == "error":
-        messagebox.showerror(title, message)
+        return messagebox.showerror(title, message)
     elif type == "yesno":
-        messagebox.askyesno(title, message)
+        return messagebox.askyesno(title, message)
     else:
-        pass
-
-
-# Function for import button.
+        return
 
 
 def import_file():
+    """ Function for the import button.
+    """
     global files
     global index
 
@@ -166,10 +222,10 @@ def import_file():
     index += 1
 
 
-# Function for delete button.
-
-
 def delete_file():
+    """ Function for the delete button.
+    """
+
     global files
     global index
 
@@ -188,10 +244,13 @@ def delete_file():
             index -= 1
 
 
-# Function for merge button.
-
-
 def merge_files():
+    """ Function for the merge button.
+
+    Returns:
+        None -- Return is used to terminate the function.    
+    """
+
     global files
     global index
     global ent_name
@@ -247,10 +306,12 @@ def merge_files():
         return
 
 
-# Function for split button.
-
-
 def split_file():
+    """ Function for splitting selected pages into a seperate pdf file]
+
+    TODO: Clena up and comment
+    """
+
     global files
     global index
     global ls_files
@@ -278,6 +339,14 @@ def split_file():
 
 
 def split_window():
+    """ Function that creates a Toplevel() window for the split feature.
+
+    Returns:
+        None -- Terminates the function.
+
+    TODO: Clean up and comment
+    """
+
     global files
     global ls_files
     global lsPages
@@ -329,10 +398,11 @@ def split_window():
                                            for f in [selPages, split_file, top.destroy]])
             button.pack()
 
-# Function for save button.
-
 
 def save_file():
+    """ Function for the save button.
+    """
+
     global files
     global ls_files
     pdf_writer = PdfFileWriter()
@@ -369,8 +439,9 @@ def save_file():
 #   INIT FOR BUTTONS   #
 ########################
 
-# Buttons are initialized here because they need functions
-# to be defined.
+""" Buttons are initialized here because they need functions to be defined.
+"""
+
 fr_buttons = tk.Frame(master=stapler, relief=tk.RAISED, bd=2)
 btn_import = tk.Button(master=fr_buttons,
                        text="Import",
@@ -393,7 +464,12 @@ btn_save = tk.Button(master=fr_buttons,
 #   THE LAYOUT   #
 ##################
 
-# Position of widgets.
+""" Positions of all the elements that build up to be the GUI.
+
+    TODO: The layout might go inside the Stapler class.
+"""
+
+# Position of the widgets.
 fr_buttons.grid(row=1, column=0,
                 rowspan=1, columnspan=1,
                 sticky="nesw")
