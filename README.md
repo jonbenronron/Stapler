@@ -20,12 +20,12 @@ GUI (general user interface) is created with Tkinter. (Included in python standa
 In future this is not needed because executable version of application will include all packages you need to run it.
 
 ### Future plans:
-- [X] Object oriented approach. (Working with this at the moment.)
-- [X] Split feature that allows user to copy a page or several pages from pdf file and creates a new pdf file from them.
+- [X] Object oriented approach. (Working with this at the moment.) (Ready.)
+- [X] Split feature that allows user to copy a page or several pages from pdf file and creates a new pdf file from them. (Ready.)
 - [ ] Make it executable stapler.exe (windows) and stapler.app (mac).
 - [ ] Change file maintenance from list into sqlite3 data bases.
 
 ### Known bugs:
-- [X] Unmerged pdf-files can't be saved. (OO-approach will probably fix this issue.)
-- [X] Saving has some issues.
+- [X] Unmerged pdf-files can't be saved. (OO-approach will probably fix this issue.) (Fixed.)
+- [X] Saving has some issues. (Fixed.)
 - [ ] Pdf info is not transfered to the newly created pdf files.
